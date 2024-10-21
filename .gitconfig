@@ -1,0 +1,11 @@
+[init]
+	defaultBranch = master
+[user]
+	email = tomas.strnad1997@gmail.com
+    name = Tomas Strnad
+
+[includeIf "gitdir:~/school/"]
+    path = ~/.gitconfig-cvut
+
+[includeIf "gitdir:~/handel/"]
+    path = ~/.gitconfig-handel
