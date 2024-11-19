@@ -1,4 +1,4 @@
 #!/bin/bash
 xrandr --output DP-2 --rotate left  --pos 0x0
-xrandr --output DP-4  --pos 1080x840 --primary
+xrandr --output DP-4  --pos 1080x840 -r 144 --primary
 xrandr --output DP-0  --pos 3000x840
