@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+tmux send-keys -t mines "nvim ." ENTER
+tmux new-window -d -t mines -n client -c "/home/tomas/personal/mines/mines_client/"
+tmux new-window -d -t mines -n server -c "/home/tomas/personal/mines/mines_server/"
+tmux send-keys -t mines:server  "go run ." ENTER

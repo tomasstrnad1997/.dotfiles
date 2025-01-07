@@ -21,6 +21,10 @@ fi
 
 if ! tmux has-session -t=$selected_name 2> /dev/null; then
     tmux new-session -ds $selected_name -c $selected
+    custom_config="${HOME}/.local/scripts/tmux-sessions/${selected_name}"
+    if [[ -f $custom_config ]]; then
+        $custom_config
+    fi
 fi
 
 venv="${selected}/.venv/bin/activate"
