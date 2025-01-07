@@ -53,3 +53,6 @@ PS1='\[\033[0;91m\]$(exit_status)\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\
 if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
+
+# Set up fzf key bindings and fuzzy completion
+eval "$(fzf --bash)"
