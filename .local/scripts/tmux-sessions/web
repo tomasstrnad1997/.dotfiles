@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+tmux send-keys -t web "nvim ." ENTER
+tmux new-window -d -t web -n terminal -c "/home/tomas/personal/web/"
+tmux new-window -d -t web -n backend -c "/home/tomas/personal/web/backend"
+tmux new-window -d -t web -n frontend -c "/home/tomas/personal/web/frontend"
+tmux send-keys -t web:backend  "air" ENTER
+tmux send-keys -t web:frontend  "npm run dev" ENTER

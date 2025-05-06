@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 tmux send-keys -t mines "nvim ." ENTER
-tmux new-window -d -t mines -n client -c "/home/tomas/personal/mines/mines_client/"
-tmux new-window -d -t mines -n server -c "/home/tomas/personal/mines/mines_server/"
+tmux new-window -d -t mines -n client -c "/home/tomas/personal/mines/cmd/client/"
+tmux new-window -d -t mines -n server -c "/home/tomas/personal/mines/cmd/server/"
+tmux new-window -d -t mines -n launcher -c "/home/tomas/personal/mines/cmd/launcher/"
+tmux new-window -d -t mines -n matchmaking -c "/home/tomas/personal/mines/cmd/matchmaking/"
 tmux send-keys -t mines:server  "go run ." ENTER
+tmux send-keys -t mines:launcher  "go run ." ENTER
+tmux send-keys -t mines:matchmaking  "go run ." ENTER
