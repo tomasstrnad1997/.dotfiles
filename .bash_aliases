@@ -8,4 +8,7 @@ alias dotfiles='/usr/bin/git --git-dir="$HOME/.dotfiles/repo" --work-tree="$HOME
 alias google-personal="i3-msg -q 'workspace 4; exec google-chrome-stable --profile-directory=Default'"
 alias google-work="i3-msg -q 'workspace 3; exec google-chrome-stable --profile-directory=Profile\ 2'"
 alias ll="ls -lah"
-alias sk="/usr/bin/screenkey --geometry 200x400+2400+1000 -s small --opacity 0.4"
+alias sk="screenkey --geometry 200x400+2675+1100 -s small --opacity 0.4"
+alias sunf="curl wttr.in/Prague"
+alias sun="curl wttr.in/?format=4"
+alias sung="curl v2.wttr.in/"
