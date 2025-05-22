@@ -1,0 +1,116 @@
+#!/bin/bash
+
+verbose=true
+overwrite=false
+interactive=false
+
+print_help() {
+    cat << EOF
+Usage: $0 [options] [files or directories]
+
+Options:
+--no-verbose        Disable verbose output
+-f, --force         Force overwriting existing files
+-i, --interactive   Ask before overwriting files
+-h, --help          Show this help message and exit
+EOF
+}
+
+
+ask_overwrite() {
+  local file="$1"
+  while true; do
+    read -rp "File '$file' exists. Overwrite? (Y/n) " answer
+    answer=${answer:-y}
+    case "$answer" in
+      [Yy]* ) return 0 ;;
+      [Nn]* ) return 1 ;;
+      * ) echo "Please answer y or n." ;;
+    esac
+  done
+}
+
+rename_spaces() {
+    local target="$1"
+    if [[ -f "$target" ]]; then
+        local dir=$(dirname "$target")
+        local base=$(basename "$target")
+        if [[ "$base" != *" "* ]]; then
+            return 0
+        fi
+        local newbase=$(echo "$base" | sed 's/ /_/g')
+        local newname="$dir/$newbase"
+        if [[ -e "$newname" ]]; then
+            if [[ "$force" == true ]]; then
+                mv -f -- "$target" "$newname"
+                $verbose && echo "Force overwrote: $target → $newname"
+            elif [[ "$interactive" == true ]];then
+                if ask_overwrite "$newname"; then
+                    mv -f -- "$target" "$newname"
+                    $verbose && echo "Overwrote: $target → $newname"
+                else 
+                    $verbose && echo "Skipped: $target"
+                fi
+            else
+                $verbose && echo "Skipped (Exists): $target"
+            fi
+        else
+            mv -- "$target" "$newname"
+            $verbose && echo "Renamed: $target → $newname"
+        fi
+    elif [[ -d "$target" ]]; then
+        for f in "$target"/*; do
+            [[ -e "$f" ]] || continue
+            rename_spaces "$f"
+        done
+    fi
+}
+
+while [[ $# -gt 0 ]]; do
+    case $1 in 
+        --no-verbose)
+            verbose=false
+            ;;
+        -f|--force)
+            force=true
+            ;;
+        -h|--help)
+            print_help
+            exit 0
+            ;;
+        -i|--interactive)
+            interactive=true
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            print_help
+            exit 1
+            ;;
+        *)
+            break
+            ;;
+    esac
+    shift
+done
+
+if [[ "$force" == true && "$interactive" == true ]]; then
+  echo "Error: --force and --interactive cannot be used together." >&2
+  echo "Try '$0 --help' for more information." >&2
+  exit 1
+fi
+
+
+
+if [[ $# -eq 0 ]]; then
+    set -- .
+fi
+
+while [[ $# -gt 0 ]]; do
+    rename_spaces "$1"
+    shift
+done
+
