@@ -1,0 +1,22 @@
+markup=pango
+
+
+command=~/.config/i3blocks/scripts/$BLOCK_NAME
+
+[local-ip]
+command=ip -4 addr show $(ip route | awk '/default/ {print $5}') | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1
+interval=30
+label=IP:
+
+[temperature]
+interval=5
+
+[ram]
+interval=5
+
+[lang]
+interval=1
+
+[time]
+command=date '+%a %d/%m/%Y %H:%M:%S'
+interval=1

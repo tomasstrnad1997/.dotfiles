@@ -1,0 +1,13 @@
+#!/bin/bash
+
+LED_MASK=0x$(xset -q | grep 'LED mask' | awk '{print $NF}')
+
+
+# xset -q - group 2 active indicator is 12
+BIT_MASK=$(( 1 << 12))
+if (( ($LED_MASK & $BIT_MASK)!= 0)); then
+    echo "CZ"
+else
+    echo "US"
+fi
+

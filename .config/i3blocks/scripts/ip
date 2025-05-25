@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DEFAULT_INTERFACE=$(ip route | awk '/default/ {print $5}')
+
+IP_ADDRESS=$(ip -4 addr show "$DEFAULT_INTERFACE" | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+
+if [ -n "$IP_ADDRESS" ]; then
+    echo "IPv4: $IP_ADDRESS"
+else
+    echo "IPv4: N/A"
+fi

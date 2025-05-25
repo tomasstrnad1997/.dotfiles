@@ -1,0 +1,23 @@
+#!/bin/bash
+
+MEM_INFO=$(free -k | awk '/Mem:/ {print $3, $2}')
+USED_KB=$(echo $MEM_INFO | awk '{print $1}')
+TOTAL_KB=$(echo $MEM_INFO | awk '{print $2}')
+
+PERCENT=$(echo "scale=0; (100*$USED_KB / $TOTAL_KB)" | bc)
+
+USED_GB=$(echo "scale=1; $USED_KB / (1024 * 1024)" | bc)
+TOTAL_GB=$(echo "scale=1; $TOTAL_KB / (1024 * 1024)" | bc)
+
+THRESHOLD_YELLOW=75  # Yellow if 75% or more used
+THRESHOLD_RED=90     # Red if 90% or more used
+
+if (( $(echo "$PERCENT < $THRESHOLD_YELLOW" | bc -l) )); then
+    COLOR="#FFFFFF" # White (default)
+elif (( $(echo "$PERCENT < $THRESHOLD_RED" | bc -l) )); then
+    COLOR="#FFFF00" # Yellow (warning)
+else
+    COLOR="#FF0000" # Red (critical)
+fi
+
+echo "<span foreground=\"${COLOR}\">RAM: ${USED_GB}/${TOTAL_GB} (${PERCENT}%)</span>"

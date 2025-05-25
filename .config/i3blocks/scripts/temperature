@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TEMP_RAW=$(sensors | grep 'Package id' | awk '{print $4}' | sed 's/[^0-9.]//g')
+
+if (( $(echo "$TEMP_RAW < 50" | bc -l) )); then
+    COLOR="#00FF00"
+elif (( $(echo "$TEMP_RAW < 70" | bc -l) )); then
+    COLOR="#FFFF00"
+else
+    COLOR="#FF0000"
+fi
+
+echo "<span foreground=\"${COLOR}\">CPU: ${TEMP_RAW}°C</span>"
