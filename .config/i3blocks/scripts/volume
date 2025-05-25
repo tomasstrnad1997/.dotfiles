@@ -1,0 +1,47 @@
+#!/bin/bash
+
+SINK="@DEFAULT_SINK@"
+
+get_volume_status() {
+    MUTED=$(pactl get-sink-mute "$SINK" | awk '{print $2}')
+
+    VOLUME_PERCENT=$(pactl get-sink-volume "$SINK" | grep -oP '\d+(?=%)' | head -1)
+
+    if [ "$MUTED" = "yes" ]; then
+        echo "<span foreground=\"#FF0000\">♪: MUTE</span>" # Red text for MUTE
+    else
+        if (( VOLUME_PERCENT >= 80 )); then # Adjust this threshold as desired
+            echo "<span foreground=\"#FFFF00\">♪: ${VOLUME_PERCENT}%</span>"
+        else
+            echo "<span foreground=\"#FFFFFF\">♪: ${VOLUME_PERCENT}%</span>"
+        fi
+    fi
+}
+
+        format = "♪: %volume"
+# BLOCK_BUTTON: 1=Left click, 2=Middle click, 3=Right click, 4=Scroll up, 5=Scroll down
+case "$BLOCK_BUTTON" in
+    1) # Left click: Increase volume by 5%
+        pactl set-sink-volume "$SINK" +5% > /dev/null
+        pkill -RTMIN+11 i3blocks # Signal i3blocks to update
+        ;;
+    3) # Right click: Decrease volume by 5%
+        pactl set-sink-volume "$SINK" -5% > /dev/null
+        pkill -RTMIN+11 i3blocks # Signal i3blocks to update
+        ;;
+    2) # Middle click: Toggle Mute
+        pactl set-sink-mute "$SINK" toggle > /dev/null
+        pkill -RTMIN+11 i3blocks # Signal i3blocks to update
+        ;;
+    4) # Scroll up: Increase volume by 1%
+        pactl set-sink-volume "$SINK" +1% > /dev/null
+        pkill -RTMIN+11 i3blocks # Signal i3blocks to update
+        ;;
+    5) # Scroll down: Decrease volume by 1%
+        pactl set-sink-volume "$SINK" -1% > /dev/null
+        pkill -RTMIN+11 i3blocks # Signal i3blocks to update
+        ;;
+esac
+
+# Always output the current status when the script is run (or re-run by signal)
+get_volume_status

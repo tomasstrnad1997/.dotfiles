@@ -39,11 +39,12 @@ exec --no-startup-id nm-applet
 exec_always --no-startup-id setxkbmap -layout "us,cz(qwerty)" -option grp:ctrls_toggle
 
 # Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+# set $refresh_i3status killall -SIGUSR1 i3status
+set $refresh_i3blocks pkill -RTMIN+11 i3blocks
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +1% && $refresh_i3blocks
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -1% && $refresh_i3blocks
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3blocks
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3blocks
 
 
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id playerctl --player=spotify volume 0.01+
@@ -215,6 +216,8 @@ bindsym $mod+r mode "resize"
 bar {
     output DP-4
     status_command i3blocks
+    font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+    font pango:DejaVu Sans Mono 10
 }
 
 # Old setup using i3status
@@ -230,14 +233,14 @@ bar {
 #         font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 #         font pango:DejaVu Sans Mono 10
 # }
-# bar {
-#     output DP-2
-#     position top
-#     font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-#     font pango:DejaVu Sans Mono 20
-#     workspace_buttons no
-#     status_command i3status -c ~/.config/i3status/config-vert
-# }
+bar {
+    output DP-2
+    position top
+    font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+    font pango:DejaVu Sans Mono 20
+    workspace_buttons no
+    status_command i3blocks -c ~/.config/i3blocks/config-vert
+}
 
 exec --no-startup-id ~/.config/monitor_setup
 # exec --no-startup-id ~/.local/scripts/spotify_title &

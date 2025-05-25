@@ -4,8 +4,24 @@ DEFAULT_INTERFACE=$(ip route | awk '/default/ {print $5}')
 
 IP_ADDRESS=$(ip -4 addr show "$DEFAULT_INTERFACE" | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
 
-if [ -n "$IP_ADDRESS" ]; then
-    echo "IPv4: $IP_ADDRESS"
-else
-    echo "IPv4: N/A"
+# Default values
+TEXT="IPv4: $IP_ADDRESS"
+SHORT_TEXT="$IP_ADDRESS"
+COLOR=""
+
+# Handle click
+if [[ "$BLOCK_BUTTON" =~ ^[123]$ ]]; then
+    echo -n "$IP_ADDRESS" | DISPLAY=:0 clip -selection clipboard 2>/dev/null &
+    # Visual feedback
+    TEXT="Copied ✓"
+    SHORT_TEXT="✓"
+    COLOR="#00ff00"
+    pkill -RTMIN+1 i3blocks
 fi
+
+# Print output for i3blocks (multi-line)
+echo "$TEXT"
+echo "$SHORT_TEXT"
+echo "$COLOR"
+
+exit 0
