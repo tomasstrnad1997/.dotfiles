@@ -35,6 +35,7 @@ exec --no-startup-id nm-applet
 
 # Run dunst for notifications
 exec --no-startup-id dunst
+exec --no-startup-id picom
 
 # Set keyboard switching
 exec_always --no-startup-id setxkbmap -layout "us,cz(qwerty)" -option grp:ctrls_toggle
