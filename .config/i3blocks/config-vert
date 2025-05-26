@@ -4,6 +4,10 @@ markup=pango
 
 command=~/.config/i3blocks/scripts/$BLOCK_NAME
 
+[mediamode]
+interval=1
+signal=2
+
 [cpu]
 interval=5
 
