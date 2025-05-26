@@ -1,0 +1,38 @@
+#!/bin/bash
+
+STATUS_FILE="/tmp/obs_streaming_status"
+PROCESS_NAME="obs-monitor"
+
+if ! pgrep -x "obs" > /dev/null; then
+    echo "OBS OFFLINE"
+    echo "OBS"
+    echo "#888888"
+    exit 0
+fi
+
+if ! pgrep -x "$PROCESS_NAME" > /dev/null; then
+    echo "OBS-MONITOR-OFFLINE"
+    echo "OBS"
+    echo "#FF4444"
+    exit 0
+fi
+
+if [[ ! -f "$STATUS_FILE" ]]; then
+    echo "OBS N/A"
+    echo "OBS"
+    echo "#888888"
+    exit 0
+fi
+
+
+STATUS=$(cat "$STATUS_FILE")
+
+if [[ "$STATUS" == "1" ]]; then
+    echo "● Streaming"
+    echo "●"
+    echo "#FF4444"
+else
+    echo "○ Idle"
+    echo "○"
+    echo "#888888"
+fi
