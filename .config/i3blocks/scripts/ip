@@ -23,5 +23,3 @@ fi
 echo "$TEXT"
 echo "$SHORT_TEXT"
 echo "$COLOR"
-
-exit 0

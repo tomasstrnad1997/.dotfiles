@@ -18,7 +18,6 @@ font pango:monospace 10
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
-
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -34,6 +33,8 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# Run dunst for notifications
+exec --no-startup-id dunst
 
 # Set keyboard switching
 exec_always --no-startup-id setxkbmap -layout "us,cz(qwerty)" -option grp:ctrls_toggle
@@ -211,10 +212,12 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
+set $main DP-4
+set $right DP-0
+set $left_vert DP-2
+
 bar {
-    output DP-4
+    output $main
     status_command i3blocks
     font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
     font pango:DejaVu Sans Mono 10
@@ -227,14 +230,14 @@ bar {
 #         font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 #         font pango:DejaVu Sans Mono 10
 # }
-# bar {
-#         output DP-0
-#         output DP-2
-#         font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-#         font pango:DejaVu Sans Mono 10
-# }
 bar {
-    output DP-2
+        output $right
+        output $left_vert
+        font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+        font pango:DejaVu Sans Mono 10
+}
+bar {
+    output $left_vert
     position top
     font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
     font pango:DejaVu Sans Mono 20
@@ -245,14 +248,14 @@ bar {
 exec --no-startup-id ~/.config/monitor_setup
 # exec --no-startup-id ~/.local/scripts/spotify_title &
 
-workspace 1 output DP-3
-workspace 9 output DP-2
-workspace 2 output DP-3
-workspace 3 output DP-0
-workspace 4 output DP-0
-workspace 5 output DP-0
-workspace 6 output DP-0
-workspace 7 output DP-0
+workspace 1 output $main
+workspace 9 output $left_vert
+workspace 2 output $main
+workspace 3 output $right
+workspace 4 output $right
+workspace 5 output $right
+workspace 6 output $right
+workspace 7 output $right
 
 assign [class="Spotify"] 9
 assign [class="discord"] 6

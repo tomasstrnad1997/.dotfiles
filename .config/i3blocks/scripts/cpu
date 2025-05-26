@@ -10,4 +10,9 @@ else
     COLOR="#FF0000"
 fi
 
+if [[ "$BLOCK_BUTTON" == "1" ]]; then
+    SNAP=$(ps -eo %cpu,comm --sort=-%cpu | grep -vE '^\s*%CPU|ps'| head -n 6 | tail -n +2 | awk '{printf "%s%%  %s\n", $1, $2}')
+    notify-send -t 3000 "CPU" "$SNAP"
+fi
 echo "<span foreground=\"${COLOR}\">CPU: ${TEMP_RAW}°C</span>"
+

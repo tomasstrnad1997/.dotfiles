@@ -20,4 +20,9 @@ else
     COLOR="#FF0000" # Red (critical)
 fi
 
+if [[ "$BLOCK_BUTTON" == "1" ]]; then
+    SNAP=$(ps -eo rss,comm --sort=-rss | head -n 6 | tail -n +2 | awk '{printf "%.1fM  %s\n", $1/1024, $2}')
+    notify-send -t 3000 "RAM" "$SNAP"
+fi
+
 echo "<span foreground=\"${COLOR}\">RAM: ${USED_GB}/${TOTAL_GB} (${PERCENT}%)</span>"

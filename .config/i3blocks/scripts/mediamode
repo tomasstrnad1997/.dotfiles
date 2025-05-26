@@ -1,0 +1,55 @@
+#!/bin/bash
+
+WORKSPACE="4"
+PRIMARY="DP-4"
+SECONDARY="DP-0"
+
+
+get_current_monitor() {
+    i3-msg -t get_workspaces | jq -r --arg ws "$WORKSPACE" '.[] | select(.name==$ws) | .output'
+}
+
+
+get_focused_workspace() {
+    i3-msg -t get_workspaces | jq -r '.[] | select(.focused).name'
+}
+
+toggle_workspace() {
+    local target
+    local current=$(get_current_monitor)
+    local current_ws=$(get_focused_workspace)
+    eval $(xdotool getmouselocation --shell)
+    if [[ "$current" != "$PRIMARY" ]]; then
+        target="$PRIMARY"
+    else
+        target="$SECONDARY"
+    fi
+    i3-msg "workspace $WORKSPACE; move workspace to output $target;"  > /dev/null
+    if [[ "$target" == "$SECONDARY" ]]; then
+        i3-msg "workspace $current_ws"  > /dev/null
+        xdotool mousemove $X $Y
+    fi
+}
+
+TEXT=""
+SHORT_TEXT=""
+COLOR=""
+
+
+if [[ "$BLOCK_BUTTON" == "1" ]]; then
+    toggle_workspace
+    pkill -RTMIN+2 i3blocks
+fi
+
+CURRENT=$(get_current_monitor)
+if [[ "$CURRENT" == "$PRIMARY" ]]; then
+    TEXT="📺"
+    COLOR="#FF6F61"
+else
+    TEXT="🛠️"
+    COLOR="#4682B4"
+fi
+
+echo "$TEXT"
+echo "$SHORT_TEXT"
+echo "$COLOR"
