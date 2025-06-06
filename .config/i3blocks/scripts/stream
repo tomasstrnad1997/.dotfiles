@@ -34,5 +34,5 @@ if [[ "$STATUS" == "1" ]]; then
 else
     echo "○ Idle"
     echo "○"
-    echo "#888888"
+    echo "#8080BB"
 fi
