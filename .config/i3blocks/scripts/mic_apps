@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+TEXT=""
+SHORT_TEXT=""
+COLOR=""
+
+
+if [[ "$BLOCK_BUTTON" == "1" ]]; then
+    # mic mute $APP_TYPE $media_name
+    pkill -RTMIN+5 i3blocks
+fi
+
+apps=$(mic list | wc -l)
+if [[ $apps -eq 0 ]]; then
+    echo ""
+    exit 0
+fi
+TEXT="🎙️($apps)"
+COLOR="#00A0F0"
+echo "$TEXT"
+echo "$SHORT_TEXT"
+echo "$COLOR"

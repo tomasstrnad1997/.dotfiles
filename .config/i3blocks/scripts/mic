@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+TEXT=""
+SHORT_TEXT=""
+COLOR=""
+declare -A SYMBOL_MAP
+SYMBOL_MAP["Discord"]="💻 Discord"
+SYMBOL_MAP["dota2"]="🎮 Dota 2"
+SYMBOL_MAP["obs"]="🎬 obs"
+
+if [[ "$APP_TYPE" == "obs" ]]; then
+    media_name="Mic"
+fi
+
+if [[ "$BLOCK_BUTTON" == "1" ]]; then
+    mic mute $APP_TYPE $media_name
+    pkill -RTMIN+5 i3blocks
+fi
+
+if mic list | grep -q "$APP_TYPE"; then
+    COLOR="#00ff00"
+    muteds=$(mic get-mute "$APP_TYPE" "$media_name")
+    total=0
+    mutes=0
+    for muted in $muteds; do
+        if [[ "$muted" == "true" ]]; then
+            COLOR="#ffff00"
+            ((mutes++))
+        fi
+        ((total++))
+    done
+    if [[ $total -eq $mutes ]]; then
+        COLOR="#ff0000"
+    fi
+else
+    echo ""
+    exit 0
+fi
+
+TEXT="${SYMBOL_MAP[$APP_TYPE]}"
+if [[ -z $TEXT ]]; then
+    TEXT=$APP_TYPE
+fi
+
+echo "$TEXT"
+echo "$SHORT_TEXT"
+echo "$COLOR"

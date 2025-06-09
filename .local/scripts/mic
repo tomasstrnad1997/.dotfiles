@@ -1,0 +1,79 @@
+#!/usr/bin/sh
+print_help() {
+    cat << EOF
+Usage: $0 <command> [args]
+
+Options:
+EOF
+}
+
+list_processes() {
+    pactl -f json list source-outputs | jq -r '.[] | .properties["application.process.binary"]'
+}
+
+get_mute_app() {
+    local app_name="$1"
+    local media_name="$2"
+    if [[ -z "$media_name" ]]; then
+        pactl -f json list source-outputs | jq -r --arg app "$app_name" '.[] | select(.properties["application.process.binary"] == $app) | .mute'
+    else
+        pactl -f json list source-outputs | jq -r --arg app "$app_name" --arg mn "$media_name" '.[] | select(.properties["application.process.binary"] == $app and .properties["media.name"] == $mn) | .mute'
+    fi
+}
+
+toggle_mute_app() {
+    local app_name="$1"
+    local media_name="$2"
+    if [[ -z "$media_name" ]]; then
+        local ids=$(pactl -f json list source-outputs | jq -r --arg app "$app_name" '.[] | select(.properties["application.process.binary"] == $app) | .index')
+    else
+        local ids=$(pactl -f json list source-outputs | jq -r --arg app "$app_name" --arg mn "$media_name" '.[] | select(.properties["application.process.binary"] == $app and .properties["media.name"] == $mn) | .index')
+    fi
+    for id in $ids; do
+        pactl set-source-output-mute $id toggle
+    done
+}
+
+# pactl list short source-outputs
+# pactl list short sources | grep input
+# pactl set-source-mute 8 toggle
+
+
+command=""
+while [[ $# -gt 0 ]]; do
+    case $1 in 
+        get-mute )
+            shift
+            get_mute_app $@
+            exit 0
+            ;;
+        mute )
+            shift
+            toggle_mute_app $@
+            exit 0
+            ;;
+        list )
+            shift
+            list_processes
+            exit 0
+            ;;
+        -h|--help)
+            print_help
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            print_help
+            exit 1
+            ;;
+        *)
+            break
+            ;;
+    esac
+    shift
+done
+

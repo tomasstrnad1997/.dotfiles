@@ -4,6 +4,28 @@ markup=pango
 
 command=~/.config/i3blocks/scripts/$BLOCK_NAME
 
+[mic-dota2]
+interval=1
+signal=5
+APP_TYPE=dota2
+command=~/.config/i3blocks/scripts/mic
+
+[mic-Discord]
+interval=1
+signal=5
+APP_TYPE=Discord
+command=~/.config/i3blocks/scripts/mic
+
+[mic-obs]
+interval=1
+signal=5
+APP_TYPE=obs
+command=~/.config/i3blocks/scripts/mic
+
+[mic_apps]
+interval=1
+signal=5
+
 [mediamode]
 interval=1
 signal=2
